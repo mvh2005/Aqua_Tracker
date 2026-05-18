@@ -1,30 +1,25 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Settings, 
   Trash2, 
   History, 
   Droplets,
-  Waves,
-  Sparkles,
-  GlassWater,
-  Droplet,
-  Cloud
+  LayoutDashboard
 } from 'lucide-react';
 import { UserProfile, IntakeLog, DailySummary } from './types';
 import { STORAGE_KEYS, INTAKE_PRESETS, OTHER_DRINKS } from './constants';
 import { getTodayKey, formatVolume, calculateStreaks } from './utils/calculations';
 import SetupForm from './components/SetupForm';
 import WaterWave from './components/WaterWave';
-import AICoachCard from './components/AICoachCard';
+import HealthAnalysisCard from './components/HealthAnalysisCard';
+import ManualInput from './components/ManualInput';
 import HistoryChart from './components/HistoryChart';
 import StreakBadge from './components/StreakBadge';
-import ImageEditor from './components/ImageEditor';
 
 const App: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [logs, setLogs] = useState<IntakeLog[]>([]);
-  const [activeTab, setActiveTab] = useState<'today' | 'trends' | 'aura'>('today');
+  const [activeTab, setActiveTab] = useState<'today' | 'trends'>('today');
 
   useEffect(() => {
     const savedProfile = localStorage.getItem(STORAGE_KEYS.USER_PROFILE);
@@ -63,8 +58,7 @@ const App: React.FC = () => {
 
   const todayTotal = todayLogs.reduce((acc, log) => acc + log.amount, 0);
   const progressPercentage = profile ? (todayTotal / profile.dailyGoal) * 100 : 0;
-  const isGoalMetToday = progressPercentage >= 100;
-
+  
   const streakStats = useMemo(() => {
     if (!profile) return { currentStreak: 0, bestStreak: 0 };
     return calculateStreaks(logs, profile.dailyGoal);
@@ -92,113 +86,168 @@ const App: React.FC = () => {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-slate-950 py-12 px-4 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <SetupForm onComplete={handleProfileComplete} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#070f2b] pb-32 text-slate-100 overflow-x-hidden relative">
-      <header className="bg-[#070f2b]/80 backdrop-blur-md border-b border-sky-900/50 sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-white pb-32 text-slate-900 overflow-x-hidden selection:bg-slate-900/10">
+      
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="bg-sky-500 p-2 rounded-xl shadow-lg shadow-sky-500/20">
-            <Cloud className="w-5 h-5 text-white" />
+          <div className="bg-slate-900 shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-2 rounded-xl text-white">
+            <Droplets className="w-5 h-5" />
           </div>
-          <h1 className="text-xl font-black tracking-tight text-white italic">SKY HYDRATE</h1>
+          <div>
+            <h1 className="text-lg font-bold text-slate-900 leading-none tracking-tight">Aqua tracker</h1>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Status: {progressPercentage >= 100 ? 'Optimized' : 'Active'}</p>
+          </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <StreakBadge count={streakStats.currentStreak} />
-          <button onClick={() => setProfile(null)} className="p-2 text-sky-400/60 hover:text-sky-300">
+          <button onClick={() => setProfile(null)} className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-100 rounded-xl text-slate-400 hover:text-slate-900 transition-all">
             <Settings className="w-5 h-5" />
           </button>
         </div>
       </header>
 
-      <main className="max-w-xl mx-auto px-6 py-8 space-y-10">
+      <main className="max-w-lg mx-auto px-6 py-6 space-y-12">
         {activeTab === 'today' && (
-          <>
-            <div className="flex flex-col items-center justify-center py-8">
-              <WaterWave percentage={progressPercentage} />
-              <div className="mt-8 text-center">
-                <div className={`text-6xl font-black transition-all ${isGoalMetToday ? 'text-sky-300 drop-shadow-[0_0_20px_rgba(56,189,248,0.5)]' : 'text-slate-100'}`}>
+          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            
+            <div className="flex flex-col items-center">
+              <div className="relative group">
+                <div className="absolute -inset-4 bg-slate-100 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <WaterWave percentage={progressPercentage} />
+              </div>
+              
+              <div className="mt-10 text-center">
+                <div className="text-7xl font-bold text-slate-900 tracking-tighter">
                   {formatVolume(todayTotal)}
                 </div>
-                <div className="text-sky-500/60 font-bold uppercase tracking-widest text-[11px] mt-2">
-                  Target: {formatVolume(profile.dailyGoal)}
+                <div className="flex items-center justify-center gap-2 mt-3">
+                  <div className="h-[1px] w-8 bg-slate-100" />
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">
+                    Goal: {formatVolume(profile.dailyGoal)}
+                  </p>
+                  <div className="h-[1px] w-8 bg-slate-100" />
                 </div>
               </div>
             </div>
 
-            <AICoachCard profile={profile} currentIntake={todayTotal} />
-
-            <section className="space-y-5">
-              <div className="flex items-center gap-2">
-                <Droplets className="w-5 h-5 text-sky-400" />
-                <h3 className="text-lg font-bold tracking-tight uppercase tracking-tighter">Sky Logistics</h3>
+            <section className="space-y-4">
+              <div className="flex items-center gap-2 px-1">
+                <div className="w-1 h-3 bg-slate-900 rounded-full" />
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Quick Log</h3>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 {INTAKE_PRESETS.map((preset, idx) => (
-                  <button key={idx} onClick={() => addLog(preset.amount)} className="flex items-center gap-4 p-5 bg-sky-900/10 border border-sky-900/40 rounded-3xl hover:border-sky-400 transition-all active:scale-95 group backdrop-blur-sm">
-                    <div className="bg-sky-950 p-3 rounded-2xl group-hover:bg-sky-500 text-sky-400 group-hover:text-white transition-all">
+                  <button 
+                    key={idx} 
+                    onClick={() => addLog(preset.amount)} 
+                    className="group flex flex-col items-start gap-4 p-5 bg-slate-50 border border-slate-100 rounded-[2rem] hover:border-slate-900/20 hover:bg-white hover:shadow-xl hover:shadow-slate-100 transition-all duration-300 active:scale-95 text-left"
+                  >
+                    <div className="bg-white p-3 rounded-2xl text-slate-900 shadow-sm transition-colors border border-slate-100">
                       {preset.icon}
                     </div>
-                    <span className="font-black text-slate-200">{preset.amount}ml</span>
-                  </button>
-                ))}
-              </div>
-              <div className="bg-sky-950/20 border border-sky-900/30 rounded-[2rem] p-6 flex gap-6 overflow-x-auto scrollbar-hide shadow-inner">
-                {OTHER_DRINKS.map((drink, idx) => (
-                  <button key={idx} onClick={() => addLog(Math.round(drink.amount * drink.hydratingFactor), drink.label)} className="flex-shrink-0 flex flex-col items-center gap-2 group">
-                    <div className="w-14 h-14 rounded-2xl bg-sky-900/40 border border-sky-800 flex items-center justify-center group-hover:bg-sky-500 transition-all shadow-lg">
-                      {drink.icon}
+                    <div>
+                      <span className="block font-bold text-2xl text-slate-900 tracking-tight">{preset.amount}ml</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-slate-500">{preset.label}</span>
                     </div>
-                    <span className="text-[10px] font-black uppercase text-sky-500/80">{drink.label}</span>
                   </button>
                 ))}
               </div>
             </section>
 
             <section className="space-y-4">
-              <h3 className="text-lg font-bold tracking-tight uppercase tracking-tighter text-sky-200">Activity Log</h3>
+              <div className="flex items-center gap-2 px-1">
+                <div className="w-1 h-3 bg-slate-900 rounded-full" />
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Manual Entry</h3>
+              </div>
+              <ManualInput onAdd={(amount) => addLog(amount)} />
+            </section>
+
+            <HealthAnalysisCard profile={profile} currentIntake={todayTotal} />
+
+            <section className="space-y-4 pb-20">
+               <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-3 border border-slate-900/20 rounded-full" />
+                  <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Log History</h3>
+                </div>
+                <span className="text-[10px] font-bold text-slate-900 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+                  {todayLogs.length} Entries
+                </span>
+              </div>
               <div className="space-y-3">
                 {todayLogs.length === 0 ? (
-                  <div className="text-center py-12 bg-sky-950/20 rounded-3xl border-2 border-dashed border-sky-900/30 text-sky-800 font-bold uppercase tracking-widest text-xs">Horizon is Clear</div>
+                  <div className="text-center py-16 bg-slate-50 rounded-[2rem] border border-dashed border-slate-200 text-slate-400 text-xs tracking-wide">
+                    Waiting for your first sip...
+                  </div>
                 ) : (
                   todayLogs.map(log => (
-                    <div key={log.id} className="bg-sky-950/30 p-4 rounded-2xl flex items-center justify-between border border-sky-900/20 hover:bg-sky-900/20 transition-colors">
+                    <div key={log.id} className="group bg-white p-5 rounded-3xl flex items-center justify-between border border-slate-100 hover:border-slate-200 hover:shadow-sm transition-all">
                       <div className="flex items-center gap-4">
-                        <div className="text-sky-400"><Droplets size={20} /></div>
+                        <div className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-600 border border-slate-100">
+                          <Droplets size={18} />
+                        </div>
                         <div>
-                          <div className="font-black text-lg text-slate-100">+{log.amount}ml</div>
-                          <div className="text-[10px] text-sky-600 uppercase font-black tracking-widest">
+                          <div className="font-bold text-xl text-slate-900 tracking-tight">+{log.amount}ml</div>
+                          <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
                             {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {log.type}
                           </div>
                         </div>
                       </div>
-                      <button onClick={() => deleteLog(log.id)} className="p-2 text-sky-900 hover:text-red-400 transition-colors"><Trash2 size={18} /></button>
+                      <button onClick={() => deleteLog(log.id)} className="p-2.5 text-slate-300 hover:text-red-500 hover:bg-red-50/50 rounded-xl transition-all opacity-0 group-hover:opacity-100">
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   ))
                 )}
               </div>
             </section>
-          </>
+          </div>
         )}
 
         {activeTab === 'trends' && (
-          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-            <HistoryChart data={historyData} />
-            <div className="bg-sky-950/30 rounded-[2.5rem] p-10 border border-sky-900/30 flex flex-col items-center text-center backdrop-blur-sm">
+          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 px-1">
+                <div className="w-1 h-3 bg-slate-900 rounded-full" />
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Performance Trends</h3>
+              </div>
+              <HistoryChart data={historyData} />
+            </div>
+
+            <div className="bg-slate-50 rounded-[2.5rem] p-10 border border-slate-100 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-slate-900/5 rounded-full blur-3xl -mr-16 -mt-16" />
               <StreakBadge count={streakStats.currentStreak} size="lg" />
-              <div className="mt-8 grid grid-cols-2 w-full gap-8 border-t border-sky-900/40 pt-8">
-                <div>
-                  <div className="text-[10px] font-black text-sky-600 uppercase mb-1 tracking-widest">Sky High Streak</div>
-                  <div className="text-3xl font-black text-slate-100">{streakStats.currentStreak} <span className="text-sm font-bold text-sky-700">Days</span></div>
+              
+              <div className="mt-12 grid grid-cols-2 w-full gap-8 border-t border-slate-200 pt-10">
+                <div className="space-y-1">
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Streak</div>
+                  <div className="text-4xl font-bold text-slate-900 tracking-tighter">{streakStats.currentStreak} <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Days</span></div>
                 </div>
-                <div className="border-l border-sky-900/40">
-                  <div className="text-[10px] font-black text-sky-600 uppercase mb-1 tracking-widest">Atmospheric Avg</div>
-                  <div className="text-3xl font-black text-sky-400">
-                    {Math.round(historyData.reduce((acc, curr) => acc + curr.total, 0) / (historyData.length || 7))}<span className="text-xs font-bold text-sky-700 ml-1">ml</span>
+                <div className="space-y-1">
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Best Record</div>
+                  <div className="text-4xl font-bold text-slate-900 tracking-tighter">{streakStats.bestStreak} <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Days</span></div>
+                </div>
+              </div>
+
+              <div className="mt-8 pt-8 border-t border-slate-200 w-full grid grid-cols-1 gap-6">
+                <div className="flex flex-col items-center">
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Daily Efficiency Avg</div>
+                  <div className="flex items-baseline gap-2">
+                    <div className="text-4xl font-bold text-slate-900 tracking-tighter">
+                      {Math.round(historyData.reduce((acc, curr) => acc + curr.total, 0) / (historyData.length || 1))}
+                      <span className="text-lg text-slate-400 ml-1">ml</span>
+                    </div>
+                    <div className="text-2xl font-bold text-slate-400 tracking-tighter">
+                      / {((historyData.reduce((acc, curr) => acc + curr.total, 0) / (historyData.length || 1)) / 1000).toFixed(2)}
+                      <span className="text-sm text-slate-500 ml-1">L</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -206,23 +255,28 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'aura' && <ImageEditor />}
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-[#070f2b]/95 backdrop-blur-2xl border-t border-sky-900/40 px-8 py-5 z-50 flex items-center justify-around shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
-        <NavButton active={activeTab === 'today'} icon={<Waves />} label="Horizon" onClick={() => setActiveTab('today')} />
-        <NavButton active={activeTab === 'aura'} icon={<Sparkles />} label="Cloud Art" onClick={() => setActiveTab('aura')} />
-        <NavButton active={activeTab === 'trends'} icon={<History />} label="Weather" onClick={() => setActiveTab('trends')} />
+      <nav className="fixed bottom-8 left-6 right-6 z-50">
+        <div className="max-w-xs mx-auto bg-white/80 backdrop-blur-2xl border border-slate-200 rounded-[2rem] p-2 flex items-center justify-between shadow-2xl">
+          <button 
+            onClick={() => setActiveTab('today')}
+            className={`flex-1 flex flex-col items-center gap-1.5 py-4 rounded-[1.5rem] transition-all duration-300 ${activeTab === 'today' ? 'text-slate-900 bg-slate-50 shadow-inner' : 'text-slate-400 hover:text-slate-600'}`}
+          >
+            <Droplets size={22} strokeWidth={activeTab === 'today' ? 2.5 : 2} />
+            <span className={`text-[10px] font-bold uppercase tracking-[0.1em] ${activeTab === 'today' ? 'opacity-100' : 'opacity-60'}`}>Today</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('trends')}
+            className={`flex-1 flex flex-col items-center gap-1.5 py-4 rounded-[1.5rem] transition-all duration-300 ${activeTab === 'trends' ? 'text-slate-900 bg-slate-50 shadow-inner' : 'text-slate-400 hover:text-slate-600'}`}
+          >
+            <History size={22} strokeWidth={activeTab === 'trends' ? 2.5 : 2} />
+            <span className={`text-[10px] font-bold uppercase tracking-[0.1em] ${activeTab === 'trends' ? 'opacity-100' : 'opacity-60'}`}>Trends</span>
+          </button>
+        </div>
       </nav>
     </div>
   );
 };
-
-const NavButton = ({ active, icon, label, onClick }: any) => (
-  <button onClick={onClick} className={`flex flex-col items-center gap-1 transition-all duration-300 ${active ? 'text-sky-300 scale-110 drop-shadow-[0_0_8px_rgba(125,211,252,0.4)]' : 'text-sky-900 hover:text-sky-700'}`}>
-    <div className={`p-2 rounded-xl transition-colors ${active ? 'bg-sky-500/10' : ''}`}>{icon}</div>
-    <span className="text-[9px] font-black uppercase tracking-[0.2em]">{label}</span>
-  </button>
-);
 
 export default App;

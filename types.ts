@@ -36,6 +36,7 @@ export interface UserProfile {
   exerciseDaysPerWeek: number;
   climate: Climate;
   caffeineCups: number;
+  sodaCans: number;
   hasMedicalCondition: boolean;
   dailyGoal: number;
 }

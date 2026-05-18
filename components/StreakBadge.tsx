@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Cloud, Sparkles } from 'lucide-react';
+import { Flame } from 'lucide-react';
 
 interface StreakBadgeProps {
   count: number;
@@ -9,25 +8,23 @@ interface StreakBadgeProps {
 
 const StreakBadge: React.FC<StreakBadgeProps> = ({ count, size = 'sm' }) => {
   if (count === 0 && size === 'sm') return null;
-
   const isLarge = size === 'lg';
 
   return (
-    <div className={`flex items-center gap-2 rounded-2xl transition-all duration-500 animate-in fade-in slide-in-from-top-2 ${
+    <div className={`flex items-center gap-2 rounded-2xl font-bold transition-all ${
       isLarge 
-        ? 'px-8 py-4 bg-sky-900/10 text-sky-300 border border-sky-400/20 backdrop-blur-md' 
-        : 'px-4 py-1.5 bg-sky-500 text-white shadow-lg shadow-sky-500/20'
+        ? 'flex-col gap-6 py-4' 
+        : 'bg-orange-50 text-orange-600 px-4 py-2 border border-orange-100'
     }`}>
-      <Sparkles className={`${isLarge ? 'w-10 h-10' : 'w-4 h-4'} ${count > 0 ? 'fill-white animate-pulse' : ''}`} />
-      <div className="flex flex-col leading-none">
-        <span className={`${isLarge ? 'text-4xl font-black italic' : 'text-sm font-black italic'}`}>
+      <div className={`${isLarge ? 'bg-orange-50 p-6 rounded-[2rem] border border-orange-100 shadow-sm' : ''}`}>
+        <Flame className={`${isLarge ? 'w-10 h-10 text-orange-600' : 'w-4 h-4 fill-current'}`} strokeWidth={2.5} />
+      </div>
+      <div className="flex flex-col items-center">
+        <span className={isLarge ? 'text-6xl text-slate-900 tracking-tighter' : 'text-xs tracking-tight'}>
           {count}
         </span>
-        {isLarge && (
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-600 mt-2">
-            Horizon Days
-          </span>
-        )}
+        {isLarge && <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-2">Active Day Streak</span>}
+        {!isLarge && <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 hidden sm:inline">Days</span>}
       </div>
     </div>
   );

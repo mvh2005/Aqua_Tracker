@@ -1,8 +1,0 @@
-{
-  "name": "Aqua tracker App",
-  "description": "A high-performance hydration tracker featuring minimalist bio-metric analysis, streak monitoring, and advanced intake analytics.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}

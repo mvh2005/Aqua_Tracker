@@ -21,8 +21,8 @@ The entire application (HTML structure, styles, SVG icons, and JavaScript logic)
 ## 🚀 Quick Start
 
 ### Double-Click to Open
-Because the app is fully consolidated, you can open it directly from your file explorer:
-1. Double-click [index.html](file:///c:/GitHub/Waret/index.html) (or drag it into any web browser).
+You can open the app directly from your file explorer:
+1. Double-click [index.html](file:///c:/GitHub/Aqua_Tracker/index.html) (or drag it into any web browser).
 2. Complete the biometric setup.
 3. Start tracking!
 
@@ -42,9 +42,12 @@ Then navigate to `http://localhost:8000` in your browser.
 ## 📂 Project Structure
 
 ```
-Waret/
-├── index.html     # Self-contained application code (CSS + JS + HTML)
-└── README.md      # Project overview and documentation
+Aqua_Tracker/
+├── assets/
+│   ├── style.css      # Core styles, layout, and animations
+│   └── app.js         # Application logic, data storage, and calculations
+├── index.html         # Core structure referencing stylesheets and scripts
+└── README.md          # Project overview and documentation
 ```
 
 ---
@@ -53,4 +56,5 @@ Waret/
 
 - **No external frameworks**: Hand-coded vanilla HTML5, CSS3 transitions, and modern ES6 JavaScript.
 - **Canvas API**: Rendered custom responsive bar and radar charts.
+- **Clean separation**: Divided into logical HTML, CSS, and JS components.
 - **No Build Steps**: No npm installs, bundlers (Vite/Webpack), or compiler steps needed.

@@ -1,0 +1,14 @@
+{
+  "appId": "com.mvh2005.aquatracker",
+  "appName": "Aqua Tracker",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#020617"
+    }
+  }
+}

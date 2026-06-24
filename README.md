@@ -197,6 +197,12 @@ The methodology follows the **water balance** model used in nutrition science:
 
 ---
 
+## 📚 References
+
+- [Hydration Calculator — Methodology](https://www.hydrationforhealth.com/en/hydration-tools/hydration-calculator/#section-methodology) — Hydration for Health (Danone Research). Describes the fluid balance methodology and scientific basis for estimating daily water needs.
+
+---
+
 ## 📝 License
 
 MIT © 2026 mvh2005

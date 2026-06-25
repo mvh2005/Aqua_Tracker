@@ -6,7 +6,11 @@
 Aqua Tracker calculates your exact fluid requirement using established biometric formulas (DuBois BSA, Mifflin-St Jeor BMR, and the fluid balance methodology), then lets you log your intake throughout the day against that measured target.
 
 ---
+# 📱 Aqua Tracker
 
+Click [here](https://github.com/mvh2005/Aqua_Tracker/tree/main/APK_FILE) to browse the APK folder, or download the latest APK directly below.
+
+➡️ **[Download APK](https://github.com/mvh2005/Aqua_Tracker/raw/refs/heads/main/APK_FILE/Aqua_Tracker.apk)**
 
 
 ### 1 · Clone the repository

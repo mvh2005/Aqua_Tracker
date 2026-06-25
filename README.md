@@ -7,33 +7,7 @@ Aqua Tracker calculates your exact fluid requirement using established biometric
 
 ---
 
-## 📂 Project Structure
 
-```
-Aqua_Tracker/
-├── index.html              # Vite entry point
-├── package.json
-├── vite.config.js
-├── capacitor.config.json   # Capacitor native bridge config
-├── src/
-│   ├── main.jsx            # React root mount
-│   ├── App.jsx             # Route: Setup ↔ Dashboard
-│   ├── index.css           # Global dark water theme + animations
-│   ├── hooks/
-│   │   ├── useProfile.js   # localStorage profile persistence
-│   │   └── useLogs.js      # localStorage intake log + streak logic
-│   ├── utils/
-│   │   └── waterCalc.js    # BSA, BMR, all loss/gain formulas
-│   └── components/
-│       ├── SetupWizard.jsx / .module.css   # 4-step onboarding wizard
-│       ├── Dashboard.jsx   / .module.css   # Main tracking view
-│       ├── WaterOrb.jsx    / .module.css   # Animated water sphere
-│       └── MethodologyPanel.jsx / .module.css  # Interactive diagram
-├── css/
-│   └── style.css           # (legacy — no longer used)
-└── js/
-    └── app.js              # (legacy — no longer used)
-```
 
 ### 1 · Clone the repository
 
@@ -205,6 +179,33 @@ npm run cap:open    # = npx cap open android
 | `cap sync` complains about plugin versions | Run `npm install` first to ensure all packages are at compatible versions |
 
 ---
+## 📂 Project Structure
+
+```
+Aqua_Tracker/
+├── index.html              # Vite entry point
+├── package.json
+├── vite.config.js
+├── capacitor.config.json   # Capacitor native bridge config
+├── src/
+│   ├── main.jsx            # React root mount
+│   ├── App.jsx             # Route: Setup ↔ Dashboard
+│   ├── index.css           # Global dark water theme + animations
+│   ├── hooks/
+│   │   ├── useProfile.js   # localStorage profile persistence
+│   │   └── useLogs.js      # localStorage intake log + streak logic
+│   ├── utils/
+│   │   └── waterCalc.js    # BSA, BMR, all loss/gain formulas
+│   └── components/
+│       ├── SetupWizard.jsx / .module.css   # 4-step onboarding wizard
+│       ├── Dashboard.jsx   / .module.css   # Main tracking view
+│       ├── WaterOrb.jsx    / .module.css   # Animated water sphere
+│       └── MethodologyPanel.jsx / .module.css  # Interactive diagram
+├── css/
+│   └── style.css           # (legacy — no longer used)
+└── js/
+    └── app.js              # (legacy — no longer used)
+```
 
 ## 🎯 How It Works — Usage Guide
 

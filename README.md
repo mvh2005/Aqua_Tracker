@@ -8,9 +8,9 @@ Aqua Tracker calculates your exact fluid requirement using established biometric
 ---
 # 📱 Aqua Tracker
 
-Click [here](https://github.com/mvh2005/Aqua_Tracker/tree/main/APK_FILE) to browse the APK folder, or download the latest APK directly below.
+Click [here](https://github.com/mvh2005/Aqua_Tracker/tree/main) to browse the APK folder, or download the latest APK directly below.
 
-➡️ **[Download APK](https://github.com/mvh2005/Aqua_Tracker/raw/refs/heads/main/APK_FILE/Aqua_Tracker.apk)**
+➡️ **[Download APK](https://github.com/mvh2005/Aqua_Tracker/raw/refs/heads/main/Aqua_Tracker.apk)**
 
 
 ### 1 · Clone the repository

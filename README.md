@@ -15,13 +15,6 @@ Aqua_Tracker/
 ├── package.json
 ├── vite.config.js
 ├── capacitor.config.json   # Capacitor native bridge config
-├── android/                # Native Android project (auto-managed by Capacitor)
-│   ├── app/
-│   │   └── build.gradle    # App-level Gradle config
-│   ├── build.gradle        # Root Gradle config (AGP 8.13.0)
-│   ├── variables.gradle    # SDK versions & dependency versions
-│   ├── gradlew / gradlew.bat
-│   └── …
 ├── src/
 │   ├── main.jsx            # React root mount
 │   ├── App.jsx             # Route: Setup ↔ Dashboard

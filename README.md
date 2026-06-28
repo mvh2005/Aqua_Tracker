@@ -318,17 +318,6 @@ The methodology follows the **water balance** model used in nutrition science:
    ~0.12 ml of water is produced per kcal via oxidative metabolism (H₂O is a byproduct of burning carbs, fats, and proteins).
 
 6. **Fixed losses** — Faecal (150 ml) and Urinary (1400 ml) are standard clinical reference values.
-
----
-
-## 🛡️ Privacy
-
-- **100% client-side** — no servers, no tracking, no accounts.
-- All data lives in your browser's `localStorage` under keys:
-  - `aqua_tracker_user_profile`
-  - `aqua_tracker_intake_logs`
-- Clear your browser data to reset everything.
-
 ---
 
 ## 🛠️ Tech Stack

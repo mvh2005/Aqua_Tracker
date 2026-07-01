@@ -1,17 +1,39 @@
 # 💧 Aqua Tracker — Scientific Daily Hydration
 
 > **Measures** your daily water capacity — not guesses it.  
-> Powered by **React + Vite**, built with a premium water-themed UI.
+> Powered by **React + Vite + Capacitor**, built with a premium water-themed UI.
 
 Aqua Tracker calculates your exact fluid requirement using established biometric formulas (DuBois BSA, Mifflin-St Jeor BMR, and the fluid balance methodology), then lets you log your intake throughout the day against that measured target.
 
 ---
+
 # 📱 Aqua Tracker
 
 Click [here](https://github.com/mvh2005/Aqua_Tracker/tree/main) to browse the APK folder, or download the latest APK directly below.
 
 ➡️ **[Download APK](https://github.com/mvh2005/Aqua_Tracker/raw/refs/heads/main/Aqua_Tracker.apk)**
 
+---
+
+## ✨ What's New
+
+| Version | Changes |
+|---|---|
+| **Latest** | 🔔 Hydration reminder notifications · 🎨 Restored default Android app icon |
+| Previous | Initial React + Capacitor release |
+
+### 🔔 Hydration Reminder Notifications
+- Schedule automatic reminders at a custom interval (every 1, 2, 3, 4, or 6 hours)
+- Set active hours (e.g. 8 AM – 10 PM)
+- 7-day rolling schedule using `@capacitor/local-notifications`
+- Toggle, configure, or send a test notification from the 🔔 bell icon in the dashboard header
+- Works on Android (and gracefully no-ops on web)
+
+### 🎨 Default App Icon Restored
+- Icon background restored to Android default green (`#3DDC84`)
+- Standard Android robot foreground vector
+
+---
 
 ### 1 · Clone the repository
 
@@ -42,6 +64,8 @@ Then open **http://localhost:5173** in your browser. The dev server supports hot
 npm run build       # compiles to /dist  (not committed to Git)
 npm run preview     # serves /dist locally to verify the build
 ```
+
+---
 
 ## 📱 Building the Android App (APK)
 
@@ -120,7 +144,6 @@ gradlew.bat assembleRelease     # Windows
 
 Output: `android/app/build/outputs/apk/release/app-release-unsigned.apk`
 
-
 ### Live Reload (Development)
 
 For rapid iteration on a physical device on the same network:
@@ -181,8 +204,10 @@ npm run cap:open    # = npx cap open android
 | APK installs but shows blank screen | Make sure you ran `npm run build` before `npx cap sync` |
 | Changes not reflecting on device | Re-run `npm run cap:build`, then click ▶ Run again in Android Studio |
 | `cap sync` complains about plugin versions | Run `npm install` first to ensure all packages are at compatible versions |
+| Notifications not appearing | Go to Android Settings → Apps → Aqua Tracker → Notifications and enable them |
 
 ---
+
 ## 📂 Project Structure
 
 ```
@@ -190,26 +215,34 @@ Aqua_Tracker/
 ├── index.html              # Vite entry point
 ├── package.json
 ├── vite.config.js
-├── capacitor.config.json   # Capacitor native bridge config
-├── src/
-│   ├── main.jsx            # React root mount
-│   ├── App.jsx             # Route: Setup ↔ Dashboard
-│   ├── index.css           # Global dark water theme + animations
-│   ├── hooks/
-│   │   ├── useProfile.js   # localStorage profile persistence
-│   │   └── useLogs.js      # localStorage intake log + streak logic
-│   ├── utils/
-│   │   └── waterCalc.js    # BSA, BMR, all loss/gain formulas
-│   └── components/
-│       ├── SetupWizard.jsx / .module.css   # 4-step onboarding wizard
-│       ├── Dashboard.jsx   / .module.css   # Main tracking view
-│       ├── WaterOrb.jsx    / .module.css   # Animated water sphere
-│       └── MethodologyPanel.jsx / .module.css  # Interactive diagram
-├── css/
-│   └── style.css           # (legacy — no longer used)
-└── js/
-    └── app.js              # (legacy — no longer used)
+├── capacitor.config.json   # Capacitor native bridge config (StatusBar + LocalNotifications)
+├── android/                # Native Android project (auto-managed by Capacitor)
+│   ├── app/
+│   │   ├── build.gradle    # App-level Gradle config
+│   │   └── src/main/
+│   │       ├── AndroidManifest.xml   # Permissions incl. POST_NOTIFICATIONS
+│   │       └── res/                  # Icons, drawables, values
+│   ├── build.gradle        # Root Gradle config (AGP 8.13.0)
+│   └── variables.gradle    # SDK versions & dependency versions
+└── src/
+    ├── main.jsx            # React root mount
+    ├── App.jsx             # Route: Setup ↔ Dashboard
+    ├── index.css           # Global dark water theme + animations
+    ├── hooks/
+    │   ├── useProfile.js        # localStorage profile persistence
+    │   ├── useLogs.js           # localStorage intake log + streak logic
+    │   └── useNotifications.js  # Local notification scheduling & permissions
+    ├── utils/
+    │   └── waterCalc.js    # BSA, BMR, all loss/gain formulas
+    └── components/
+        ├── SetupWizard.jsx / .module.css         # 4-step onboarding wizard
+        ├── Dashboard.jsx   / .module.css         # Main tracking view
+        ├── WaterOrb.jsx    / .module.css         # Animated water sphere
+        ├── MethodologyPanel.jsx / .module.css    # Interactive diagram
+        └── NotificationSettings.jsx / .module.css # 🔔 Reminder config panel
 ```
+
+---
 
 ## 🎯 How It Works — Usage Guide
 
@@ -276,25 +309,10 @@ Once set up, the main dashboard gives you:
 | **Stats Bar** | Today's intake · Remaining · Day streak |
 | **Quick Add** | One-tap presets (Espresso 200ml, Glass 350ml, Bottle 500ml, Sport 750ml) |
 | **Custom Amount** | Type any ml value and press Enter or Add |
-| **Today's Log** | Timestamped list of all entries, swipe to delete |
+| **Today's Log** | Timestamped list of all entries, tap trash to delete |
+| **🔔 Reminders** | Bell icon → schedule hydration notifications |
 | **⚗️ Methodology** | Opens the interactive calculation diagram showing your exact numbers |
 | **Goal Banner** | Celebration when you hit your daily target 🎉 |
-
-### ⚗️ Methodology Panel
-Click the **"Scientifically calculated · Xml/day"** badge under the water orb to open the methodology diagram — a live interactive breakdown matching the fluid balance flowchart:
-
-```
-Input Data  →  Calculation  →  Sum of Losses / Sum of Gains
-                                             ↓
-                              = Estimated water deficit
-                          (compensated by your fluid intake)
-```
-
-### ⚙️ Settings / Reset Profile
-Click the settings icon (top-right) to reset your profile. Your **intake log history is preserved**.
-
----
-
 
 ---
 
@@ -318,6 +336,19 @@ The methodology follows the **water balance** model used in nutrition science:
    ~0.12 ml of water is produced per kcal via oxidative metabolism (H₂O is a byproduct of burning carbs, fats, and proteins).
 
 6. **Fixed losses** — Faecal (150 ml) and Urinary (1400 ml) are standard clinical reference values.
+
+---
+
+## 🛡️ Privacy
+
+- **100% client-side** — no servers, no tracking, no accounts.
+- All data lives in your browser's / device's `localStorage` under keys:
+  - `aqua_tracker_user_profile`
+  - `aqua_tracker_intake_logs`
+  - `aqua_tracker_notif_prefs`
+- Notifications are scheduled **locally on your device** — no data ever leaves it.
+- Clear your browser/app data to reset everything.
+
 ---
 
 ## 🛠️ Tech Stack
@@ -328,6 +359,7 @@ The methodology follows the **water balance** model used in nutrition science:
 | Build Tool | Vite 8 |
 | Native Bridge | Capacitor 8 |
 | Android | Gradle 8.13 · SDK 36 · Min SDK 24 |
+| Notifications | `@capacitor/local-notifications` 8.2.0 |
 | Styling | CSS Modules + Glassmorphism |
 | Fonts | Inter + Space Grotesk (Google Fonts) |
 | Storage | `localStorage` (no database) |

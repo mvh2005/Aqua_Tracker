@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import styles from './Dashboard.module.css';
 import WaterOrb from './WaterOrb';
 import MethodologyPanel from './MethodologyPanel';
+import NotificationSettings from './NotificationSettings';
 import { formatVol } from '../utils/waterCalc';
 
 const PRESETS = [
@@ -16,10 +17,11 @@ function Toast({ msg }) {
 }
 
 export default function Dashboard({ profile, logs, todayLogs, todayTotal, addLog, removeLog, calculateStreak, onResetProfile }) {
-  const [customAmt, setCustomAmt]     = useState('');
-  const [toast, setToast]             = useState('');
-  const [showMethod, setShowMethod]   = useState(false);
-  const [customError, setCustomError] = useState(false);
+  const [customAmt, setCustomAmt]         = useState('');
+  const [toast, setToast]                 = useState('');
+  const [showMethod, setShowMethod]       = useState(false);
+  const [showNotif, setShowNotif]         = useState(false);
+  const [customError, setCustomError]     = useState(false);
 
   const { dailyGoal, calcBreakdown } = profile;
   const progressPct = Math.min((todayTotal / dailyGoal) * 100, 100);
@@ -82,6 +84,12 @@ export default function Dashboard({ profile, logs, todayLogs, todayTotal, addLog
             </div>
           </div>
           <div className={styles.headerRight}>
+            <button className={styles.btnIcon} title="Hydration Reminders" onClick={() => setShowNotif(true)}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+            </button>
             <button className={styles.btnIcon} title="How it's calculated" onClick={() => setShowMethod(true)}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
                 <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
@@ -234,6 +242,11 @@ export default function Dashboard({ profile, logs, todayLogs, todayTotal, addLog
       {/* Methodology Panel */}
       {showMethod && calcBreakdown && (
         <MethodologyPanel calc={calcBreakdown} onClose={() => setShowMethod(false)} />
+      )}
+
+      {/* Notification Settings Panel */}
+      {showNotif && (
+        <NotificationSettings onClose={() => setShowNotif(false)} />
       )}
 
       {/* Toast */}

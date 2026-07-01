@@ -9,6 +9,11 @@
     "StatusBar": {
       "style": "DARK",
       "backgroundColor": "#020617"
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_launcher_foreground",
+      "iconColor": "#3DDC84",
+      "sound": "beep.wav"
     }
   }
 }
